@@ -76,8 +76,11 @@ impl Drop for MailViewState {
 impl std::fmt::Display for MailViewState {
     fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Self::Init { .. } | Self::LoadingBody { .. } => {
-                write!(fmt, "loading")
+            Self::Init { .. } => {
+                write!(fmt, "init")
+            }
+            Self::LoadingBody { .. } => {
+                write!(fmt, "loading body")
             }
             Self::Error { err } => {
                 let err = err.to_string();

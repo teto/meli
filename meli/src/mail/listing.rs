@@ -2893,16 +2893,27 @@ impl Component for Listing {
                     .count()
                     .ok()
                     .unwrap_or((0, 0));
+                let status_str = match account[&mailbox_hash].status {
+                        MailboxStatus::Parsing ( doing, done ) => "(Loading...)",
+                        MailboxStatus::Failed (..) => "Failed",
+                        _ => ""
+                    };
+    // Available,
+    // Failed(Error),
+    // /// first argument is done work, and second is total work
+    // Parsing(usize, usize),
+                    // if is_parsing {
+                    //     "(Loading...)"
+                    // } else {
+                    //     ""
+                    // }
+
                 format!(
                     "Mailbox: {}, Messages: {}, New: {}{}",
                     account[&mailbox_hash].name(),
                     total,
                     unseen,
-                    if account[&mailbox_hash].status.is_parsing() {
-                        "(Loading...)"
-                    } else {
-                        ""
-                    }
+                    status_str
                 )
             }
             MailboxStatus::Failed(_) | MailboxStatus::None => account[&mailbox_hash].status(),

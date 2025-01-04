@@ -84,10 +84,10 @@ impl std::fmt::Display for MailViewState {
             }
             Self::Error { err } => {
                 let err = err.to_string();
-                write!(fmt, "{}", err.trim_at_boundary(8))
+                write!(fmt, "error {}", err.trim_at_boundary(8))
             }
             Self::Loaded { env, .. } => {
-                write!(fmt, "{}", env.subject().as_ref().trim_at_boundary(8))
+                write!(fmt, "loaded {}", env.subject().as_ref().trim_at_boundary(8))
             }
         }
     }

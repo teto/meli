@@ -187,9 +187,15 @@ pub fn get_events(
         let Ok(_n_raw) = poll(&mut poll_fds, PollTimeout::NONE) else {
             break 'poll_while;
         };
+        let stdin_revents = poll_fds[0].revents().unwrap_or_else(PollFlags::empty);
+        if stdin_revents.intersects(
+            PollFlags::POLLERR | PollFlags::POLLHUP | PollFlags::POLLNVAL,
+        ) {
+            break 'poll_while;
+        }
         select! {
             default => {
-                if poll_fds[0].revents().is_some() {
+                if stdin_revents.contains(PollFlags::POLLIN) {
                     'stdin_while: for c in stdin_iter.by_ref() {
                         match (c, &mut input_mode) {
                             (Ok((TermionEvent::Key(TermionKey::Alt(']')), _)), InputMode::Normal)=> {
